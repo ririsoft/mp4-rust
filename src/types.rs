@@ -688,6 +688,7 @@ impl TryFrom<u32> for DataType {
 pub enum MetadataKey {
     Title,
     Year,
+    Poster,
 }
 
 pub trait Metadata<'a> {
@@ -695,6 +696,8 @@ pub trait Metadata<'a> {
     fn title(&self) -> Option<Cow<str>>;
     /// The video's release year
     fn year(&self) -> Option<u32>;
+    /// The video's poster (cover art)
+    fn poster(&self) -> Option<&[u8]>;
 }
 
 impl<'a, T: Metadata<'a>> Metadata<'a> for &'a T {
@@ -705,6 +708,10 @@ impl<'a, T: Metadata<'a>> Metadata<'a> for &'a T {
     fn year(&self) -> Option<u32> {
         (**self).year()
     }
+
+    fn poster(&self) -> Option<&[u8]> {
+        (**self).poster()
+    }
 }
 
 impl<'a, T: Metadata<'a>> Metadata<'a> for Option<T> {
@@ -714,5 +721,9 @@ impl<'a, T: Metadata<'a>> Metadata<'a> for Option<T> {
 
     fn year(&self) -> Option<u32> {
         self.as_ref().and_then(|t| t.year())
+    }
+
+    fn poster(&self) -> Option<&[u8]> {
+        self.as_ref().and_then(|t| t.poster())
     }
 }

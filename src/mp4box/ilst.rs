@@ -33,6 +33,9 @@ impl<R: Read + Seek> ReadBox<&mut R> for IlstBox {
                 BoxType::DayBox => {
                     items.insert(MetadataKey::Year, IlstItemBox::read_box(reader, s)?);
                 }
+                BoxType::CovrBox => {
+                    items.insert(MetadataKey::Poster, IlstItemBox::read_box(reader, s)?);
+                }
                 _ => {
                     // XXX warn!()
                     skip_box(reader, s)?;
@@ -99,6 +102,14 @@ impl<'a> Metadata<'a> for IlstBox {
     fn year(&self) -> Option<u32> {
         self.items.get(&MetadataKey::Year).and_then(item_to_u32)
     }
+
+    fn poster(&self) -> Option<&[u8]> {
+        self.items.get(&MetadataKey::Poster).map(item_to_bytes)
+    }
+}
+
+fn item_to_bytes(item: &IlstItemBox) -> &[u8] {
+    &item.data.data
 }
 
 fn item_to_str(item: &IlstItemBox) -> Cow<str> {

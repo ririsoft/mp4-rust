@@ -192,7 +192,8 @@ boxtype! {
     DataBox => 0x64617461,
     IlstBox => 0x696c7374,
     NameBox => 0xa96e616d,
-    DayBox => 0xa9646179
+    DayBox => 0xa9646179,
+    CovrBox => 0x636f7672
 
 }
 

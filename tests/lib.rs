@@ -2,7 +2,7 @@ use mp4::{
     AudioObjectType, AvcProfile, ChannelConfig, MediaType, Metadata, Mp4Reader, SampleFreqIndex,
     TrackType,
 };
-use std::fs::File;
+use std::fs::{self, File};
 use std::io::BufReader;
 use std::time::Duration;
 
@@ -163,9 +163,14 @@ fn get_reader(path: &str) -> Mp4Reader<BufReader<File>> {
 
 #[test]
 fn test_read_metadata() {
-    // Extended audio object type and sample rate index of 15
+    let want_poster = fs::read("tests/samples/big_buck_bunny.jpg").unwrap();
     let mp4 = get_reader("tests/samples/big_buck_bunny_metadata.m4v");
     let metadata = mp4.metadata();
     assert_eq!(metadata.title(), Some("Big Buck Bunny".into()));
     assert_eq!(metadata.year(), Some(2008));
+
+    assert!(metadata.poster().is_some());
+    let poster = metadata.poster().unwrap();
+    assert_eq!(poster.len(), want_poster.len());
+    assert_eq!(poster, want_poster.as_slice());
 }
