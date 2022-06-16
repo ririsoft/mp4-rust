@@ -1,5 +1,6 @@
 use mp4::{
-    AudioObjectType, AvcProfile, ChannelConfig, MediaType, Mp4Reader, SampleFreqIndex, TrackType,
+    AudioObjectType, AvcProfile, ChannelConfig, MediaType, Metadata, Mp4Reader, SampleFreqIndex,
+    TrackType,
 };
 use std::fs::File;
 use std::io::BufReader;
@@ -158,4 +159,13 @@ fn get_reader(path: &str) -> Mp4Reader<BufReader<File>> {
     let reader = BufReader::new(f);
 
     mp4::Mp4Reader::read_header(reader, f_size).unwrap()
+}
+
+#[test]
+fn test_read_metadata() {
+    // Extended audio object type and sample rate index of 15
+    let mp4 = get_reader("tests/samples/big_buck_bunny_metadata.m4v");
+    let metadata = mp4.metadata();
+    assert_eq!(metadata.title(), Some("Big Buck Bunny".into()));
+    assert_eq!(metadata.year(), Some(2008));
 }
