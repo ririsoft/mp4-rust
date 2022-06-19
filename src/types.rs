@@ -689,6 +689,7 @@ pub enum MetadataKey {
     Title,
     Year,
     Poster,
+    Summary,
 }
 
 pub trait Metadata<'a> {
@@ -698,6 +699,8 @@ pub trait Metadata<'a> {
     fn year(&self) -> Option<u32>;
     /// The video's poster (cover art)
     fn poster(&self) -> Option<&[u8]>;
+    /// The video's summary
+    fn summary(&self) -> Option<Cow<str>>;
 }
 
 impl<'a, T: Metadata<'a>> Metadata<'a> for &'a T {
@@ -712,6 +715,10 @@ impl<'a, T: Metadata<'a>> Metadata<'a> for &'a T {
     fn poster(&self) -> Option<&[u8]> {
         (**self).poster()
     }
+
+    fn summary(&self) -> Option<Cow<str>> {
+        (**self).summary()
+    }
 }
 
 impl<'a, T: Metadata<'a>> Metadata<'a> for Option<T> {
@@ -725,5 +732,9 @@ impl<'a, T: Metadata<'a>> Metadata<'a> for Option<T> {
 
     fn poster(&self) -> Option<&[u8]> {
         self.as_ref().and_then(|t| t.poster())
+    }
+
+    fn summary(&self) -> Option<Cow<str>> {
+        self.as_ref().and_then(|t| t.summary())
     }
 }

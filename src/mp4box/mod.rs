@@ -193,8 +193,8 @@ boxtype! {
     IlstBox => 0x696c7374,
     NameBox => 0xa96e616d,
     DayBox => 0xa9646179,
-    CovrBox => 0x636f7672
-
+    CovrBox => 0x636f7672,
+    DescBox => 0x64657363
 }
 
 pub trait Mp4Box: Sized {

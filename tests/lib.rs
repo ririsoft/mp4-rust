@@ -164,10 +164,12 @@ fn get_reader(path: &str) -> Mp4Reader<BufReader<File>> {
 #[test]
 fn test_read_metadata() {
     let want_poster = fs::read("tests/samples/big_buck_bunny.jpg").unwrap();
+    let want_summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue.";
     let mp4 = get_reader("tests/samples/big_buck_bunny_metadata.m4v");
     let metadata = mp4.metadata();
     assert_eq!(metadata.title(), Some("Big Buck Bunny".into()));
     assert_eq!(metadata.year(), Some(2008));
+    assert_eq!(metadata.summary(), Some(want_summary.into()));
 
     assert!(metadata.poster().is_some());
     let poster = metadata.poster().unwrap();

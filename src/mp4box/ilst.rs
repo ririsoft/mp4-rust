@@ -36,6 +36,9 @@ impl<R: Read + Seek> ReadBox<&mut R> for IlstBox {
                 BoxType::CovrBox => {
                     items.insert(MetadataKey::Poster, IlstItemBox::read_box(reader, s)?);
                 }
+                BoxType::DescBox => {
+                    items.insert(MetadataKey::Summary, IlstItemBox::read_box(reader, s)?);
+                }
                 _ => {
                     // XXX warn!()
                     skip_box(reader, s)?;
@@ -105,6 +108,10 @@ impl<'a> Metadata<'a> for IlstBox {
 
     fn poster(&self) -> Option<&[u8]> {
         self.items.get(&MetadataKey::Poster).map(item_to_bytes)
+    }
+
+    fn summary(&self) -> Option<Cow<str>> {
+        self.items.get(&MetadataKey::Summary).map(item_to_str)
     }
 }
 
